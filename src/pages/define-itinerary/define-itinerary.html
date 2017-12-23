@@ -6,7 +6,7 @@
   <ion-item no-lines class="item">
     <ion-label color="primary">Lieu de départ :</ion-label>
     <ion-input no-lines [(ngModel)]="itinerary.startPlace" placeholder="Jean Jaurès..."></ion-input>
-    <button ion-button item-right id="location">
+    <button ion-button item-right (click)="getCurrentPosition()" id="location">
       <ion-icon name="pin" ></ion-icon>
     </button>
   </ion-item>

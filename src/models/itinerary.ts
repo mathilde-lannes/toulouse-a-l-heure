@@ -2,6 +2,7 @@ import { DatesService } from '../utils/dates.service';
 
 export class Itinerary {
   startPlace: string;
+  startPlaceXY: string;
   endPlace: string;
   arrivalToday: Date;
   arrivalTime: string;
@@ -10,6 +11,7 @@ export class Itinerary {
 
   constructor() {
     this.startPlace = '';
+    this.startPlaceXY = '';
     this.endPlace = '';
     this.arrivalToday = new Date();
     this.arriveAsap();
