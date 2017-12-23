@@ -9,7 +9,5 @@ export class TabsPage {
 
   tab1Root = DefineItineraryPage;
 
-  constructor() {
-
-  }
+  constructor() {}
 }
