@@ -9,7 +9,6 @@ import { MyApp } from './app.component';
 import { DatesService } from '../utils/dates.service';
 import { TisseoService } from '../utils/tisseo.service';
 
-import { Itinerary } from '../models/itinerary';
 import { DefineItineraryPage } from '../pages/define-itinerary/define-itinerary';
 import { TabsPage } from '../pages/tabs/tabs';
 
