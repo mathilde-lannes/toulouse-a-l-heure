@@ -1,7 +1,5 @@
 <ion-content>
-  <br>
   <h3> Nouveau trajet </h3>
-  <br>
 
   <ion-item no-lines class="item">
     <ion-label color="primary">Lieu de départ :</ion-label>
@@ -15,6 +13,37 @@
     <ion-label color="primary">Lieu d'arrivée :</ion-label>
     <ion-input no-lines [(ngModel)]="itinerary.endPlace" placeholder="Ramonville..."></ion-input>
   </ion-item>
+
+  <ion-item no-lines>
+		<ion-label color="primary">Date d'arrivée :</ion-label>
+		<button item-content (click)="changeDate(false)" [disabled]="itinerary.arrivalDate==TODAY" class="changeTime">
+			<ion-icon name="remove" ></ion-icon>
+		</button>
+
+		<ion-datetime displayFormat="DD/MM/YYYY" pickerFormat="DD MM YYYY" [min]="TODAY" [max]="maximumDate"
+    [ngModel]="itinerary.arrivalDate" (ngModelChange)="changeArrivalDate($event)" placeholder="jour/mois/année"
+    [disabled]="departureTomorrow"></ion-datetime>
+
+		<button item-end (click)="changeDate(true)" [disabled]="itinerary.arrivalDate==maximumDate" class="changeTime">
+			<ion-icon name="add" ></ion-icon>
+		</button>
+	</ion-item>
+
+  <ion-item no-lines>
+		<ion-label color="primary">Heure d'arrivée :</ion-label>
+		<ion-datetime displayFormat="HH:mm" [min]="getMinimumDepartureTime()" [(ngModel)]="itinerary.arrivalTime"
+    placeholder="heure:minute" [disabled]="isArrivalASAP || isArrivalInOneHour"></ion-datetime>
+	</ion-item>
+
+  <ion-item no-lines class="checkbox">
+	    <ion-label color="8A8C8F"><i>Arrivée le plus tôt possible</i> </ion-label>
+	    <ion-checkbox [(ngModel)]="isArrivalASAP" [disabled]="isArrivalInOneHour || itinerary.arrivalDate != TODAY"></ion-checkbox>
+	</ion-item>
+
+	<ion-item no-lines class="checkbox">
+	    <ion-label color="8A8C8F"><i>Arrivée dans une heure</i> </ion-label>
+	    <ion-checkbox [(ngModel)]="isArrivalInOneHour" [disabled]="isArrivalASAP || itinerary.arrivalDate != TODAY"></ion-checkbox>
+	</ion-item>
 
   <ion-grid>
     <ion-row>

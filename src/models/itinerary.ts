@@ -4,7 +4,7 @@ export class Itinerary {
   startPlace: string;
   startPlaceXY: string;
   endPlace: string;
-  arrivalToday: Date;
+  arrivalDate: string;
   arrivalTime: string;
   transportMode: TransportMode[];
   private datesService: DatesService = new DatesService();
@@ -13,7 +13,7 @@ export class Itinerary {
     this.startPlace = '';
     this.startPlaceXY = '';
     this.endPlace = '';
-    this.arrivalToday = new Date();
+    this.arrivalDate = this.datesService.formatDate();
     this.arriveAsap();
     this.transportMode = [];
   }

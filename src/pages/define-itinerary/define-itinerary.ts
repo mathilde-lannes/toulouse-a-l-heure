@@ -3,13 +3,18 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { NavController, NavParams } from 'ionic-angular';
 import { Itinerary } from '../../models/itinerary';
 import { TisseoService } from '../../utils/tisseo.service';
+import { DatesService } from '../../utils/dates.service';
 
 @Component({
   selector: 'page-define-itinerary',
   templateUrl: 'define-itinerary.html'
 })
 export class DefineItineraryPage {
+  private const TODAY;
   private itinerary = new Itinerary();
+	private maximumDate : string;
+  private isArrivalASAP : boolean = false;
+  private isArrivalInOneHour : boolean = false;
   private transports = {
     metro: true,
     bus: true,
@@ -17,7 +22,13 @@ export class DefineItineraryPage {
   };
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
-              private geolocation: Geolocation, private tisseoService: TisseoService) { }
+              private geolocation: Geolocation, private tisseoService: TisseoService,
+              private datesService: DatesService) {
+    this.TODAY = this.datesService.formatDate();
+    let date = new Date();
+		date.setMonth(date.getMonth() + 1);
+		this.maximumDate = this.datesService.formatDate(date);
+  }
 
   getCurrentPosition() : void {
     this.getXYCoordinates().then(coords =>
@@ -44,8 +55,33 @@ export class DefineItineraryPage {
 
   searchItinerary() : void {
     this.itinerary.setTransportModes(this.transports);
+    if (this.isArrivalASAP) this.itinerary.arriveAsap();
+    if (this.isArrivalInOneHour) this.itinerary.arriveInOneHour();
     console.log("Current itinerary => ", this.itinerary);
   }
+
+  getMinimumDepartureTime() {
+		if (this.itinerary.arrivalDate == this.TODAY)
+			return this.datesService.formatTime();
+		else
+			return '00:00';
+	}
+
+  private changeDate(isOneMoreDay: boolean) {
+		let newDate = new Date(this.itinerary.arrivalDate);
+		newDate.setDate(isOneMoreDay ? newDate.getDate()+1 : newDate.getDate()-1);
+		this.itinerary.arrivalDate = this.datesService.formatDate(newDate);
+		this.changeArrivalDate();
+	}
+
+	private changeArrivalDate(dateFromDatepicker ?: string) {
+		if (dateFromDatepicker)
+			this.itinerary.arrivalDate = dateFromDatepicker;
+		if (this.itinerary.arrivalDate != this.TODAY) {
+			if (this.isArrivalASAP) this.isArrivalASAP = false;
+			if (this.isArrivalInOneHour) this.isArrivalInOneHour = false;
+		}
+	}
 
   ionViewWillLeave() {
 		this.itinerary = new Itinerary();
