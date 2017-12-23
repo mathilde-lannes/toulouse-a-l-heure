@@ -12,17 +12,24 @@ import { Itinerary } from '../../models/itinerary';
 @Component({
   selector: 'page-define-itinerary',
   templateUrl: 'define-itinerary.html'
-  // providers : [Itinerary]
 })
 export class DefineItineraryPage {
+  private itinerary = new Itinerary();
+  private transports = {
+    metro: true,
+    bus: true,
+    tramway: true
+  };
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-    let iti = new Itinerary();
-    console.log('ITI', iti);
+  constructor(public navCtrl: NavController, public navParams: NavParams) { }
+
+  searchItinerary() : void {
+    this.itinerary.setTransportModes(this.transports);
+    console.log("Current itinerary => ", this.itinerary);
   }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad DefineItineraryPage');
-  }
+  ionViewWillLeave() {
+		this.itinerary = new Itinerary();
+	}
 
 }

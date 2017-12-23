@@ -5,6 +5,7 @@ export class Itinerary {
   endPlace: string;
   arrivalToday: Date;
   arrivalTime: string;
+  transportMode: TransportMode[];
   private datesService: DatesService = new DatesService();
 
   constructor() {
@@ -12,20 +13,33 @@ export class Itinerary {
     this.endPlace = '';
     this.arrivalToday = new Date();
     this.arriveAsap();
+    this.transportMode = [];
   }
 
-  arriveAsap() {
+  arriveAsap() : void {
     this.arrivalTime = this.datesService.formatTime();
   }
 
-  arriveInOneHour() {
+  arriveInOneHour() : void {
     const today = new Date();
     const nextHour = (today.getHours()+1) < 10 ? '0' + (today.getHours()+1) : (today.getHours()+1);
     const currentMinutes = today.getMinutes() < 10 ? '0' + today.getMinutes() : today.getMinutes();
     this.arrivalTime = currentMinutes + ':' + nextHour;
   }
 
-  startFromCurrentPosition() {
-    // TODO add geolocation service here
+  getTransportModes() : string {
+    return this.transportMode.join();
   }
+
+  setTransportModes(transports) : void {
+    if (transports.metro) this.transportMode.push(TransportMode.Metro);
+    if (transports.bus) this.transportMode.push(TransportMode.Bus);
+    if (transports.tramway) this.transportMode.push(TransportMode.Tramway);
+  }
+}
+
+enum TransportMode {
+  Metro = "13792273858822586",
+  Bus = "13792273858822585",
+  Tramway = "13792273858822588",
 }
