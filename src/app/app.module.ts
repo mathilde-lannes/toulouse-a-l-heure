@@ -4,6 +4,8 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { AgmCoreModule, MarkerManager, GoogleMapsAPIWrapper } from '@agm/core';
 import { MyApp } from './app.component';
 
+import { DatesService } from '../utils/dates.service';
+import { Itinerary } from '../models/itinerary';
 import { DefineItineraryPage } from '../pages/define-itinerary/define-itinerary';
 import { TabsPage } from '../pages/tabs/tabs';
 
@@ -33,6 +35,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     StatusBar,
     SplashScreen,
     MarkerManager,
+    DatesService,
     GoogleMapsAPIWrapper,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
