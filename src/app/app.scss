@@ -14,3 +14,59 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+h2 {
+	color: map-get($colors, primary);
+	font-size: 25px;
+}
+
+h4 {
+	color: map-get($colors, secondary);
+}
+
+h2, h4 {
+	text-align: center;
+}
+
+@font-face {
+    font-family: 'dk_spiced_pumpkinregular';
+    src: url('../assets/fonts/dk_spiced_pumpkin-webfont.woff2') format('woff2'),
+         url('../assets/fonts/dk_spiced_pumpkin-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+h3 {
+	font-family: 'dk_spiced_pumpkinregular';
+	font-size: 43px;
+	text-align: center;
+	background-color: map-get($colors, primary);
+	border-radius: 10px;
+	color: white;
+	margin-left: 10%;
+	margin-right: 10%;
+}
+
+h5 {
+	text-align: center;
+	color: map-get($colors, dark);
+	font-size: 15px;
+}
+
+a {
+	color: map-get($colors, dark);
+}
+
+.item-inner {
+	border-bottom-color: transparent !important;
+	box-shadow: none !important;
+}
+
+ion-icon {
+	color: map-get($colors, primary);
+}
+
+ion-datetime button {
+	width: auto !important;
+}
