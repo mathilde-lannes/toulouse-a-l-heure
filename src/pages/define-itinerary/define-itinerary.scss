@@ -25,6 +25,24 @@ page-define-itinerary {
 		padding: 0;
 		margin: 0;
 	}
+
+	/* ----- AUTOCOMPLETION ----- */
+
+	.searchbar-md .searchbar-input {
+		padding: 0;
+		box-shadow: none;
+	}
+
+	.searchbar-input {
+		width: auto;
+	}
+
+	ion-auto-complete ul {
+		width: 90hv;
+		margin-left: -115px;
+	}
+
+		/* ----- /.AUTOCOMPLETION ----- */
 }
 
 .alert-title {
@@ -52,4 +70,8 @@ page-define-itinerary {
 
 .my-checkbox ion-label {
 	margin-left: 10px;
+}
+
+.col {
+	padding: 0;
 }

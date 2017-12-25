@@ -1,18 +1,36 @@
-<ion-content>
+<ion-content *ngIf="itinerary">
   <h3> Nouveau trajet </h3>
 
-  <ion-item no-lines class="item">
-    <ion-label color="primary">Lieu de départ :</ion-label>
-    <ion-input no-lines [(ngModel)]="itinerary.startPlace" placeholder="Jean Jaurès..."></ion-input>
-    <button ion-button item-right (click)="getCurrentPosition()" id="location">
-      <ion-icon name="pin" ></ion-icon>
-    </button>
-  </ion-item>
+  <ion-row>
+    <ion-col col-4>
+      <ion-item><ion-label color="primary">Départ :</ion-label></ion-item>
+    </ion-col>
 
-  <ion-item no-lines>
-    <ion-label color="primary">Lieu d'arrivée :</ion-label>
-    <ion-input no-lines [(ngModel)]="itinerary.endPlace" placeholder="Ramonville..."></ion-input>
-  </ion-item>
+    <ion-col col-7>
+      <ion-auto-complete [dataProvider]="autocompletionService" #startPlaceSearchbar
+        [options]="{ placeholder : 'Jean Jaurès...' }">
+      </ion-auto-complete>
+    </ion-col>
+
+    <ion-col col-1>
+      <button ion-button item-right (click)="getCurrentPosition()" id="location">
+        <ion-icon name="pin" ></ion-icon>
+      </button>
+    </ion-col>
+  </ion-row>
+
+  <ion-row>
+    <ion-col col-4>
+      <ion-item><ion-label color="primary">Arrivée :</ion-label></ion-item>
+    </ion-col>
+
+    <ion-col col-8>
+      <ion-auto-complete [dataProvider]="autocompletionService" #endPlaceSearchbar
+        [options]="{ placeholder : 'Ramonville...' }">
+      </ion-auto-complete>
+    </ion-col>
+  </ion-row>
+
 
   <ion-item no-lines>
 		<ion-label color="primary">Date d'arrivée :</ion-label>

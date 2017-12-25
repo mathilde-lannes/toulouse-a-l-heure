@@ -1,16 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation';
 import { NavController, NavParams } from 'ionic-angular';
 import { Itinerary } from '../../models/itinerary';
 import { TisseoService } from '../../utils/tisseo.service';
 import { DatesService } from '../../utils/dates.service';
 import { AlertsService } from '../../utils/alerts.service';
+import { AutocompleteLocationsService } from '../../utils/autocomplete-locations.service';
 
 @Component({
   selector: 'page-define-itinerary',
   templateUrl: 'define-itinerary.html'
 })
 export class DefineItineraryPage {
+  @ViewChild('startPlaceSearchbar') startPlaceSearchbar: AutoCompleteComponent;
+  @ViewChild('endPlaceSearchbar') endPlaceSearchbar: AutoCompleteComponent;
   private TODAY;
   private itinerary = new Itinerary();
 	private maximumDate : string;
@@ -24,7 +27,8 @@ export class DefineItineraryPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
               private geolocation: Geolocation, private tisseoService: TisseoService,
-              private datesService: DatesService, private alertsService: AlertsService) {
+              private datesService: DatesService, private alertsService: AlertsService,
+              private autocompletionService: AutocompleteLocationsService) {
     this.TODAY = this.datesService.formatDate();
     let date = new Date();
 		date.setMonth(date.getMonth() + 1);
@@ -58,7 +62,7 @@ export class DefineItineraryPage {
 
   translateXYCoordinatesToAddress(coordsAndAlert) {
     this.tisseoService.getAddressFromCoords(coordsAndAlert.coords).subscribe(address => {
-      this.itinerary.startPlace = address;
+      this.startPlaceSearchbar.keyword = address;
       this.itinerary.startPlaceXY = coordsAndAlert.coords;
       coordsAndAlert.alert.dismiss();
     });
@@ -68,7 +72,18 @@ export class DefineItineraryPage {
     this.itinerary.setTransportModes(this.transports);
     if (this.isArrivalASAP) this.itinerary.arriveAsap();
     if (this.isArrivalInOneHour) this.itinerary.arriveInOneHour();
+    this.setStartAndEndPlacesForItinerary();
+
     console.log("Current itinerary => ", this.itinerary);
+  }
+
+  setStartAndEndPlacesForItinerary() {
+    this.itinerary.startPlace = this.startPlaceSearchbar.keyword;
+    const startPlace = this.startPlaceSearchbar.getSelection();
+    if (startPlace.x && startPlace.y)
+      this.itinerary.startPlaceXY = startPlace.x + ',' + startPlace.y;
+
+    this.itinerary.endPlace = this.endPlaceSearchbar.getValue();
   }
 
   getMinimumDepartureTime() {
@@ -93,6 +108,17 @@ export class DefineItineraryPage {
 			if (this.isArrivalInOneHour) this.isArrivalInOneHour = false;
 		}
 	}
+
+  ionViewDidLoad() {
+    this.removeUglySearchIconFromAutocompletionModule();
+	}
+
+  removeUglySearchIconFromAutocompletionModule() {
+    document.body.addEventListener('DOMSubtreeModified', function(event) {
+        const elements = document.getElementsByClassName('searchbar-search-icon');
+        while (elements.length > 0) elements[0].remove();
+    });
+  }
 
   ionViewWillLeave() {
 		this.itinerary = new Itinerary();
