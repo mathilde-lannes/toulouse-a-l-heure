@@ -7,6 +7,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { MyApp } from './app.component';
 
 import { DatesService } from '../utils/dates.service';
+import { AlertsService } from '../utils/alerts.service';
 import { TisseoService } from '../utils/tisseo.service';
 
 import { DefineItineraryPage } from '../pages/define-itinerary/define-itinerary';
@@ -40,6 +41,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     SplashScreen,
     MarkerManager,
     DatesService,
+    AlertsService,
     TisseoService,
     GoogleMapsAPIWrapper,
     Geolocation,

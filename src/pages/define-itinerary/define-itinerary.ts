@@ -4,13 +4,14 @@ import { NavController, NavParams } from 'ionic-angular';
 import { Itinerary } from '../../models/itinerary';
 import { TisseoService } from '../../utils/tisseo.service';
 import { DatesService } from '../../utils/dates.service';
+import { AlertsService } from '../../utils/alerts.service';
 
 @Component({
   selector: 'page-define-itinerary',
   templateUrl: 'define-itinerary.html'
 })
 export class DefineItineraryPage {
-  private const TODAY;
+  private TODAY;
   private itinerary = new Itinerary();
 	private maximumDate : string;
   private isArrivalASAP : boolean = false;
@@ -23,7 +24,7 @@ export class DefineItineraryPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
               private geolocation: Geolocation, private tisseoService: TisseoService,
-              private datesService: DatesService) {
+              private datesService: DatesService, private alertsService: AlertsService) {
     this.TODAY = this.datesService.formatDate();
     let date = new Date();
 		date.setMonth(date.getMonth() + 1);
@@ -31,25 +32,35 @@ export class DefineItineraryPage {
   }
 
   getCurrentPosition() : void {
-    this.getXYCoordinates().then(coords =>
-      coords != 'NULL' ? this.translateXYCoordinatesToAddress(coords) : console.log("error when getting coords"));
+    this.getXYCoordinates()
+      .then(coordsAndAlert => this.translateXYCoordinatesToAddress(coordsAndAlert))
+      .catch(err => {
+        console.log("[ERROR] ", err.message);
+        err.alert.dismiss();
+        this.alertsService.geolocationErrorAlert(false);
+      });
   }
 
-  getXYCoordinates() : Promise<string> {
+  getXYCoordinates() : Promise<any> {
     return new Promise((resolve, reject) => {
+      let alert = this.alertsService.geolocationAlert();
       const options = {timeout: 10000, enableHighAccuracy: true, maximumAge: 0};
 
-      this.geolocation.getCurrentPosition(options).then(position => {
+      this.geolocation.getCurrentPosition(options)
+      .then(position => {
           const coords = position.coords.latitude.toString() + "," + position.coords.longitude.toString();
-  				resolve(coords);
-  		}, err => reject('NULL'));
+          let coordsAndAlert = {coords: coords, alert: alert};
+  				return resolve(coordsAndAlert);
+  		})
+      .catch(err => reject({message: err.message, alert: alert}));
     });
   }
 
-  translateXYCoordinatesToAddress(coords) {
-    this.tisseoService.getAddressFromCoords(coords).subscribe(address => {
+  translateXYCoordinatesToAddress(coordsAndAlert) {
+    this.tisseoService.getAddressFromCoords(coordsAndAlert.coords).subscribe(address => {
       this.itinerary.startPlace = address;
-      this.itinerary.startPlaceXY = coords;
+      this.itinerary.startPlaceXY = coordsAndAlert.coords;
+      coordsAndAlert.alert.dismiss();
     });
   }
 
@@ -86,5 +97,4 @@ export class DefineItineraryPage {
   ionViewWillLeave() {
 		this.itinerary = new Itinerary();
 	}
-
 }
